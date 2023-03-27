@@ -15,7 +15,9 @@ from models.models import (
     Source,
 )
 from services.date import to_unix_timestamp
+from dotenv import load_dotenv
 
+load_dotenv()
 # Read environment variables for Pinecone configuration
 PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 PINECONE_ENVIRONMENT = os.environ.get("PINECONE_ENVIRONMENT")
@@ -91,7 +93,7 @@ class PineconeDataStore(DataStore):
 
         # Split the vectors list into batches of the specified size
         batches = [
-            vectors[i : i + UPSERT_BATCH_SIZE]
+            vectors[i: i + UPSERT_BATCH_SIZE]
             for i in range(0, len(vectors), UPSERT_BATCH_SIZE)
         ]
         # Upsert each batch to Pinecone
