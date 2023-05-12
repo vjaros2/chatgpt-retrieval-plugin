@@ -23,7 +23,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-PORT = 3333
+PORT = 8080
 
 origins = [
     f"http://localhost:{PORT}",
@@ -142,4 +142,5 @@ async def startup():
 
 
 def start():
-    uvicorn.run("local-server.main:app", host="localhost", port=PORT, reload=True)
+    uvicorn.run("local-server.main:app",
+                host="localhost", port=PORT, reload=True)

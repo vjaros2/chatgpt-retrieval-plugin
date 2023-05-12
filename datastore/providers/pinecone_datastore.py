@@ -25,6 +25,9 @@ PINECONE_INDEX = os.environ.get("PINECONE_INDEX")
 assert PINECONE_API_KEY is not None
 assert PINECONE_ENVIRONMENT is not None
 assert PINECONE_INDEX is not None
+print(f"Pinecone API key: {PINECONE_API_KEY}")
+print(f"Pinecone environment: {PINECONE_ENVIRONMENT}")
+print(f"Pinecone index: {PINECONE_INDEX}")
 
 # Initialize Pinecone with the API key and environment
 pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
@@ -49,6 +52,10 @@ class PineconeDataStore(DataStore):
                 pinecone.create_index(
                     PINECONE_INDEX,
                     dimension=1536,  # dimensionality of OpenAI ada v2 embeddings
+                    metric="cosine",
+                    pods=1,
+                    replicas=1,
+                    pod_type="s1.x1",
                     metadata_config={"indexed": fields_to_index},
                 )
                 self.index = pinecone.Index(PINECONE_INDEX)
@@ -184,7 +191,7 @@ class PineconeDataStore(DataStore):
         Removes vectors by ids, filter, or everything from the index.
         """
         # Delete all vectors from the index if delete_all is True
-        if delete_all:
+        if delete_all == True:
             try:
                 print(f"Deleting all vectors from index")
                 self.index.delete(delete_all=True)
@@ -207,7 +214,7 @@ class PineconeDataStore(DataStore):
                 raise e
 
         # Delete vectors that match the document ids from the index if the ids list is not empty
-        if ids is not None and len(ids) > 0:
+        if ids != None and len(ids) > 0:
             try:
                 print(f"Deleting vectors with ids {ids}")
                 pinecone_filter = {"document_id": {"$in": ids}}
